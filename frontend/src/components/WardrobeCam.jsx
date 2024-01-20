@@ -1,10 +1,12 @@
     import React, { useEffect, useRef } from 'react';
     import * as THREE from 'three';
     import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
+    import WardrobeDivider from '../classes/WardrobeDivider.jsx';
     import Door from '../classes/Door.jsx';
 
     const WardrobeCam = () => {
         const refContainer = useRef(null);
+        
         const initScene = (refContainer) => {
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(75, refContainer.current.clientWidth / refContainer.current.clientHeight, 0.1, 1000);
@@ -17,20 +19,21 @@
             return { scene, camera, renderer };
         };
 
-        const createDraggableMesh = (scene) => {
-            const geometry = new THREE.BoxGeometry(1, 1, 1);
-            const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-            const mesh = new THREE.Mesh(geometry, material);
-            scene.add(mesh);
-            return mesh;
+
+        const createWardrobeDivider = (scene) => {
+            const divider = new WardrobeDivider();
+            divider.position.set(2, 0, 0); // Adjust position as needed
+            scene.add(divider);
+            return divider;
         };
-        
+
         const createDoor = (scene) => {
             const door = new Door();
-            door.position.set(10, 10, 10);
+            door.position.set(2, 0, 0); // Adjust position as needed
             scene.add(door);
             return door;
         };
+
         useEffect(() => {
             if (!refContainer.current) return;
         
@@ -39,11 +42,12 @@
             const coords = new THREE.AxesHelper(10);
             scene.add(coords);
         
-            const draggableMesh = createDraggableMesh(scene);
-            createDoor(scene);
+            const door = createDoor(scene);
+            const divider = createWardrobeDivider(scene);
+
         
             // Set up drag controls
-            const dragControls = new DragControls([draggableMesh], camera, renderer.domElement);
+            const dragControls = new DragControls([door,divider], camera, renderer.domElement);
             // ... drag controls event listeners ...
         
             const animate = () => {
@@ -66,9 +70,9 @@
 
 
                 // Dispose of the draggable mesh
-                scene.remove(draggableMesh);
-                draggableMesh.geometry.dispose();
-                draggableMesh.material.dispose();
+                scene.remove(door);
+                door.geometry.dispose();
+                door.material.dispose();
 
                         // Remove other objects from the scene and dispose of their resources
                 // Example for a generic object added to the scene
