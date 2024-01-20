@@ -46,14 +46,15 @@
   z-index: 1;
   top: 3%;
   left: 3%;
-  background: #ede2d0;
+  background: #d9d3cc;
   overflow-x: hidden;
-  padding: 8px;
+  padding: 4px;
+  border-radius: 15px;
 
 }
 .PropertiesMenu p {
   font-size: 18px;
-  color: #665542;
+  color: #22170e;
   line-height: 20px;
   margin-bottom: 1px;
 }
@@ -61,14 +62,31 @@
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   font-size: 21px;
-  color: #665542;
+  color: #49111C;
 }
 .PropertiesMenu input {
+  -webkit-appearance: none;
   width: 90%;
   height: 15px;
-  background: #97a2b6;
+  background: #f0f0f0;
   outline: none;
   opacity: 0.7;
   -webkit-transition: .2s;
+  outline: 1px;
   transition: opacity .2s;
+}
+.PropertiesMenu input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 17px;
+  background: #665542;
+  cursor: pointer;
+}
+
+.PropertiesMenu input::-moz-range-thumb {
+  width: 15px;
+  height: 17px;
+  background: #665542;
+  cursor: pointer;
 }
