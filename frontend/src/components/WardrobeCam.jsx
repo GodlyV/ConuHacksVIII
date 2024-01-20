@@ -118,9 +118,6 @@
                 dragControls.dispose();
                 renderer.dispose();
 
-                wardrobe.dispose();
-
-
                 // Dispose of the draggable mesh
                 scene.remove(door);
                 door.geometry.dispose();
