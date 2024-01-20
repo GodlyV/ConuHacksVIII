@@ -1,6 +1,6 @@
     import * as THREE from 'three';
     import React, { useEffect, useRef, useState } from 'react';
-
+    import { Raycaster } from 'three';
 
     import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
     import WardrobeDivider from '../classes/WardrobeDivider.jsx';
@@ -22,6 +22,7 @@
         
             const renderer = new THREE.WebGLRenderer();
             renderer.setSize(refContainer.current.clientWidth, refContainer.current.clientHeight);
+            renderer.setClearColor(0xFFFFFF);
             refContainer.current.appendChild(renderer.domElement);
         
             return { scene, camera, renderer };
@@ -62,7 +63,7 @@
             wardrobe_side_l.position.set(-width/2 + materialThickness/2, heigth/2 - materialThickness/2, 0); // move the wardrobe so that the front of it is at z=0
             scene.add(wardrobe_side_l);
 
-            return { wardrobe_base, wardrobe_base_top, wardrobe_back, wardrobe_side_r, wardrobe_side_l };
+            return [ wardrobe_base, wardrobe_base_top, wardrobe_back, wardrobe_side_r, wardrobe_side_l ];
         };
 
         const createWardrobeDivider = (scene) => {
@@ -94,6 +95,9 @@
         
             const coords = new THREE.AxesHelper(10);
             scene.add(coords);
+
+            const raycaster = new Raycaster();
+            const mouse = new THREE.Vector2();
             
             const wardrobe = createWardrobe(scene);
             const door = createDoor(scene);
@@ -116,6 +120,24 @@
                 renderer.setSize(refContainer.current.clientWidth, refContainer.current.clientHeight);
             };
             window.addEventListener('resize', handleResize);
+            const handleMouseDown = (event) => {
+        // Calculate mouse coordinates
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        // Set up the raycaster
+        raycaster.setFromCamera(mouse, camera);
+
+        // Check for intersections
+        const intersects = raycaster.intersectObjects(scene.children, true);
+        for (const intersect of intersects) {
+            if (wardrobe.includes(intersect.object)) {
+                console.log('Selected the wardrobe!');
+            }
+        }
+    };
+
+    window.addEventListener('mousedown', handleMouseDown);
         
             return () => {
                 window.removeEventListener('resize', handleResize);
