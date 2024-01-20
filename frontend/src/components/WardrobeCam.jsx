@@ -1,12 +1,11 @@
     import * as THREE from 'three';
     import React, { useEffect, useRef, useState } from 'react';
 
-    // DELETE LATER
-    import { MapControls } from 'three/addons/controls/MapControls.js';
 
     import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
     import WardrobeDivider from '../classes/WardrobeDivider.jsx';
     import Door from '../classes/Door.jsx';
+    import Rod from '../classes/Rod.jsx';
 
     const WardrobeCam = () => {
         const refContainer = useRef(null);
@@ -24,9 +23,6 @@
             const renderer = new THREE.WebGLRenderer();
             renderer.setSize(refContainer.current.clientWidth, refContainer.current.clientHeight);
             refContainer.current.appendChild(renderer.domElement);
-
-            // DELETE LATER
-            const controls = new MapControls(camera, renderer.domElement);
         
             return { scene, camera, renderer };
         };
@@ -83,6 +79,14 @@
             return door;
         };
 
+        const createRod = (scene) => {
+            const rod = new Rod();
+            rod.rotation.z = Math.PI / 2;
+            rod.position.set(0, 3, 0); // Adjust position as needed
+            scene.add(rod);
+            return rod;
+        };
+
         useEffect(() => {
             if (!refContainer.current) return;
         
@@ -94,10 +98,10 @@
             const wardrobe = createWardrobe(scene);
             const door = createDoor(scene);
             const divider = createWardrobeDivider(scene);
-
+            const rod = createRod(scene);
         
             // Set up drag controls
-            const dragControls = new DragControls([door,divider], camera, renderer.domElement);
+            const dragControls = new DragControls([door,divider,rod], camera, renderer.domElement);
             // ... drag controls event listeners ...
         
             const animate = () => {
