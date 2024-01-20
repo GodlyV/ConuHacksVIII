@@ -11,6 +11,21 @@ document.body.appendChild(renderer.domElement);
 const coords = new THREE.AxesHelper(10);
 scene.add(coords);
 
+// get mouse location
+const mouse_pos = new THREE.Vector2(); // mouse pos on screen
+const intersection_point = new THREE.Vector3(); // get mouse point in plane
+const plane_normal = new THREE.Vector3(); // get what plane normal is ( which direction are we resizing )
+
+const plane = new THREE.Plane();
+const raycaster = new THREE.Raycaster();
+
+window.addEventListener('mousemove', function(e)  {
+    mouse_pos.x = (e.clientX / window.innerWidth);
+    mouse_pos.y = -(e.clientY / window.innerHeight);
+
+    console.log(mouse_pos);
+});
+
 const geometry = new THREE.BoxGeometry();
 const material_cube = new THREE.MeshBasicMaterial({ color: 0xffffff });
 const cube = new THREE.Mesh(geometry, material_cube);
@@ -29,4 +44,10 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-animate();
+renderer.setAnimationLoop(animate);
+
+window.addEventListener('resize', function() {
+    camera.aspect = this.window.innerWidth / this.window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(this.window.innerWidth, this.window.innerHeight);
+});
