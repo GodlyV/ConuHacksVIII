@@ -3,63 +3,65 @@ import * as THREE from 'three';
 
 const WardrobeCam = () => {
     const refContainer = useRef(null);
+
     useEffect(() => {
+        // Check if the refContainer is available
+        if (!refContainer.current) return;
+
+        // Scene setup
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(75, refContainer.current.clientWidth / refContainer.current.clientHeight, 0.1, 1000);
+        camera.position.z = 10;
         
+        // Renderer setup
         const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-        
-        // helper XYZ coords
+        renderer.setSize(refContainer.current.clientWidth, refContainer.current.clientHeight);
+        refContainer.current.appendChild(renderer.domElement);
+
+        // Axes Helper
         const coords = new THREE.AxesHelper(10);
         scene.add(coords);
-        console.log("hi")
-        // get mouse location
-        const mouse_pos = new THREE.Vector2(); // mouse pos on screen
-        const intersection_point = new THREE.Vector3(); // get mouse point in plane
-        const plane_normal = new THREE.Vector3(); // get what plane normal is ( which direction are we resizing )
-        
-        const plane = new THREE.Plane();
+
+        // Mouse position
+        const mouse_pos = new THREE.Vector2();
         const raycaster = new THREE.Raycaster();
-        
-        window.addEventListener('mousemove', function(e)  {
-            mouse_pos.x = (e.clientX / window.innerWidth);
-            mouse_pos.y = -(e.clientY / window.innerHeight);
-        
-            console.log(mouse_pos);
-        });
-        
+
+        // Box Geometry
         const geometry = new THREE.BoxGeometry();
         const material_cube = new THREE.MeshBasicMaterial({ color: 0xffffff });
         const cube = new THREE.Mesh(geometry, material_cube);
         scene.add(cube);
-        
-        camera.position.z = 10;
-        
-        function animate() {
-            /*
+
+        // Animation loop
+        const animate = () => {
             requestAnimationFrame(animate);
-        
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
-            */
-            cube.scale.set(5,5,5); // adjust the scale of the cube
+            // You might want to uncomment these for rotation
+            // cube.rotation.x += 0.01;
+            // cube.rotation.y += 0.01;
+            cube.scale.set(5, 5, 5); // Adjust the scale of the cube
             renderer.render(scene, camera);
-        }
-        
-        renderer.setAnimationLoop(animate);
-        
-        window.addEventListener('resize', function() {
-            camera.aspect = this.window.innerWidth / this.window.innerHeight;
+        };
+        animate();
+
+        // Handle window resize
+        const handleResize = () => {
+            camera.aspect = refContainer.current.clientWidth / refContainer.current.clientHeight;
             camera.updateProjectionMatrix();
-            renderer.setSize(this.window.innerWidth, this.window.innerHeight);
-        });
-      animate();
+            renderer.setSize(refContainer.current.clientWidth, refContainer.current.clientHeight);
+        };
+        window.addEventListener('resize', handleResize);
+
+        // Clean up on unmount
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            refContainer.current.removeChild(renderer.domElement);
+            // Additional clean up like disposing geometries, materials, etc.
+            geometry.dispose();
+            material_cube.dispose();
+        };
     }, []);
-    return (
-      <div ref={refContainer}></div>
-  
-    );
-}
+
+    return <div ref={refContainer} style={{ width: '100vw', height: '100vh' }} />;
+};
+
 export default WardrobeCam;
