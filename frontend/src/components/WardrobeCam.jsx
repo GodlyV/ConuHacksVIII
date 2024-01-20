@@ -75,7 +75,7 @@
 
         const createDoor = (scene) => {
             const door = new Door();
-            door.position.set(2, 0, 0); // Adjust position as needed
+            door.position.set(2, 0, width/2 + 0.005); // Adjust position as needed
             scene.add(door);
             return door;
         };
