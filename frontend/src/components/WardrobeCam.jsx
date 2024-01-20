@@ -2,6 +2,8 @@
     import React, { useEffect, useRef, useState } from 'react';
     import { Raycaster } from 'three';
 
+    // import { MapControls } from 'three/addons/controls/MapControls.js'; // DELETE
+
     import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
     import WardrobeDivider from '../classes/WardrobeDivider.jsx';
     import Door from '../classes/Door.jsx';
@@ -24,6 +26,8 @@
             renderer.setSize(refContainer.current.clientWidth, refContainer.current.clientHeight);
             renderer.setClearColor(0xFFFFFF);
             refContainer.current.appendChild(renderer.domElement);
+
+            // const controls = new MapControls(camera, renderer.domElement); // DELETE
         
             return { scene, camera, renderer };
         };
@@ -120,27 +124,40 @@
                 renderer.setSize(refContainer.current.clientWidth, refContainer.current.clientHeight);
             };
             window.addEventListener('resize', handleResize);
+
             const handleMouseDown = (event) => {
-        // Calculate mouse coordinates
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                // Calculate mouse coordinates
+                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-        // Set up the raycaster
-        raycaster.setFromCamera(mouse, camera);
+                // Set up the raycaster
+                raycaster.setFromCamera(mouse, camera);
 
-        // Check for intersections
-        const intersects = raycaster.intersectObjects(scene.children, true);
-        for (const intersect of intersects) {
-            if (wardrobe.includes(intersect.object)) {
-                console.log('Selected the wardrobe!');
-            }
-        }
-    };
+                // Check for intersections
+                const intersects = raycaster.intersectObjects(scene.children, true);
+                for (const intersect of intersects) {
+                    if (wardrobe.includes(intersect.object)) {
+                        console.log('Selected the wardrobe!');
+                        const selectedMaterial = new THREE.MeshBasicMaterial({ color: 0x00FF00 });
+                        const originalMaterial = intersect.object.material;
+                        intersect.object.material = selectedMaterial;
 
-    window.addEventListener('mousedown', handleMouseDown);
+                        const handleMouseUp = () => {
+                            console.log('Mouse up - Reverting to original material');
+                            intersect.object.material = originalMaterial;
+
+                             window.removeEventListener('mouseup', handleMouseUp);
+                        };
+                        window.addEventListener('mouseup', handleMouseUp);
+                        break;
+                    }
+                }
+            };
+            window.addEventListener('mousedown', handleMouseDown);
         
             return () => {
                 window.removeEventListener('resize', handleResize);
+                window.removeEventListener('mousedown', handleMouseDown);
                 dragControls.dispose();
                 renderer.dispose();
 
