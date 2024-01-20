@@ -40,3 +40,35 @@
 .read-the-docs {
   color: #888;
 }
+.PropertiesMenu {
+  width: 15%;
+  position: fixed;
+  z-index: 1;
+  top: 3%;
+  left: 3%;
+  background: #ede2d0;
+  overflow-x: hidden;
+  padding: 8px;
+
+}
+.PropertiesMenu p {
+  font-size: 18px;
+  color: #665542;
+  line-height: 20px;
+  margin-bottom: 1px;
+}
+.PropertiesMenu h1 {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 21px;
+  color: #665542;
+}
+.PropertiesMenu input {
+  width: 90%;
+  height: 15px;
+  background: #97a2b6;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
