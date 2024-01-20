@@ -1,26 +1,22 @@
 import * as THREE from 'three';
 
-
 class Door extends THREE.Mesh {
-    constructor() {
-        // Define the size of the door
-        const width = 2;
-        const height = 4;
-        const depth = 0.1;
-        const geometry = new THREE.BoxGeometry(width, height, depth);
+    constructor(width, height, depth) {
+        // Use the provided dimensions or default values if none are provided
+        width = width || 2;   // Default width to 2 if not provided
+        height = height || 4; // Default height to 4 if not provided
+        depth = depth || 0.1; // Default depth to 0.1 if not provided
 
-        // Load a texture for the door (e.g., wood texture)
+        const geometry = new THREE.BoxGeometry(width, height, depth);
         const textureLoader = new THREE.TextureLoader();
-        const texture = textureLoader.load('path_to_texture.jpg'); // Replace with path to your texture
-        const material = new THREE.MeshBasicMaterial({ map: texture });
+        
+        // Assuming the texture is in the 'public/assets' directory
+        // const texture = textureLoader.load('assets/door.png');
+        const material = new THREE.MeshBasicMaterial({ color: 0x778899 }); // Light Slate Gray
 
         super(geometry, material);
-
-        // Set additional properties, if needed
-        this.position.set(0, height / 2, 0); // Positioning the door base at y = 0
+        this.position.set(0, height / 2, 0);
     }
-
-    // You can add custom methods if needed
 }
 
 export default Door;

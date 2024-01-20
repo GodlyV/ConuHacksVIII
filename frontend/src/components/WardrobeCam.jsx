@@ -2,12 +2,13 @@
     import React, { useEffect, useRef, useState } from 'react';
     import { Raycaster } from 'three';
 
-    // import { MapControls } from 'three/addons/controls/MapControls.js'; // DELETE
+    // DELETE LATER
 
     import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
     import WardrobeDivider from '../classes/WardrobeDivider.jsx';
     import Door from '../classes/Door.jsx';
     import Rod from '../classes/Rod.jsx';
+    import LabeledDoor from '../classes/LabeledDoor.jsx';
 
     const WardrobeCam = () => {
         const refContainer = useRef(null);
@@ -16,12 +17,16 @@
         const [heigth, setHeigth] = useState(4);
         const [depth, setDepth] = useState(1);
         const [materialThickness, setMaterialThickness] = useState(0.25);
+        const [dividers, setDividers] = useState([]); // Array to store divider clones
+        const draggableObjects = useRef([]); // Ref to store draggable objects
+        const initialDividerRef = useRef(null); // Ref to store the initial divider
+    
+    
         
         const initScene = (refContainer) => {
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(75, refContainer.current.clientWidth / refContainer.current.clientHeight, 0.1, 1000);
             camera.position.z = 10;
-        
             const renderer = new THREE.WebGLRenderer();
             renderer.setSize(refContainer.current.clientWidth, refContainer.current.clientHeight);
             renderer.setClearColor(0xFFFFFF);
@@ -72,7 +77,7 @@
 
         const createWardrobeDivider = (scene) => {
             const divider = new WardrobeDivider();
-            divider.position.set(2, 0, 0); // Adjust position as needed
+            divider.position.set(1, -4, 0); // Adjust position as needed
             scene.add(divider);
             return divider;
         };
@@ -80,6 +85,7 @@
         const createDoor = (scene) => {
             const door = new Door();
             door.position.set(2, 0, width/2 + 0.005); // Adjust position as needed
+             // Adjust position as needed
             scene.add(door);
             return door;
         };
@@ -111,6 +117,40 @@
             // Set up drag controls
             const dragControls = new DragControls([door,divider,rod], camera, renderer.domElement);
             // ... drag controls event listeners ...
+            // const wardrobe = createWardrobe(scene);
+
+            const myLabeledDoor = new LabeledDoor(2, 4, 0.1, 'My Door');
+            myLabeledDoor.position.set(-10, -4, 0);
+            scene.add(myLabeledDoor);
+        
+            const initialDivider = createWardrobeDivider(scene);
+            initialDivider.visible = true; // Make sure the initial divider is visible
+    
+            const templateDivider =     createDraggableDivider(scene);
+            templateDivider.visible = false;
+            
+            draggableObjects.current = [initialDivider];
+            const dividerDragControls = new DragControls(draggableObjects.current, camera, renderer.domElement);
+
+        
+            dividerDragControls.addEventListener('dragstart', event => {
+                // Clone the initial divider and make it the target of the drag
+                const dividerClone = templateDivider.clone();
+                dividerClone.visible = true;
+                scene.add(dividerClone);
+                setDividers(prevDividers => [...prevDividers, dividerClone]);
+    
+                // Replace the target of the drag to the clone
+                event.object = dividerClone;
+                draggableObjects.current.push(dividerClone);
+            });
+            
+                
+            dividerDragControls.addEventListener('dragend', event => {
+                // You can add any additional logic needed when drag ends
+            });
+
+    
         
             const animate = () => {
                 requestAnimationFrame(animate);
@@ -159,12 +199,13 @@
                 window.removeEventListener('resize', handleResize);
                 window.removeEventListener('mousedown', handleMouseDown);
                 dragControls.dispose();
+                dividerDragControls.dispose();
                 renderer.dispose();
 
+                // wardrobe.dispose();
+
                 // Dispose of the draggable mesh
-                scene.remove(door);
-                door.geometry.dispose();
-                door.material.dispose();
+                scene.remove(myLabeledDoor);
 
                 // Remove other objects from the scene and dispose of their resources
                 // Example for a generic object added to the scene
@@ -189,7 +230,40 @@
             };
         }, []);
 
-        return <div ref={refContainer} style={{ width: '100vw', height: '100vh' }} />;
+        return (
+            <div ref={refContainer} style={{ width: '75vw', height: '75vh' }}>
+                <button onClick={sendDividersData}>Save</button>
+            </div>
+        );
     };
 
+    const sendDividersData = () => {
+        const dividerDataArray = Array.from(dividers).map(divider => {
+            // Create a simple object with relevant data
+            return {
+                position: divider.position.toArray(),
+                dimensions: [divider.geometry.parameters.width, divider.geometry.parameters.height, divider.geometry.parameters.depth],
+                // Include other properties you need, like material properties
+            };
+        });
+
+        // Here you would send this data to a server or another component
+        console.log(dividerDataArray); // For demonstration
+    };
+
+
+    function createDraggableDivider(scene) {
+        const width = 0.1;  // Divider thickness
+        const height = 2.5; // Divider height
+        const depth = 1;    // Divider depth
+        const geometry = new THREE.BoxGeometry(width, height, depth);
+
+        // Simple color material (adjust as needed)
+        const material = new THREE.MeshBasicMaterial({ color: 0x778899 }); // Light Slate Gray
+
+        const divider = new THREE.Mesh(geometry, material);
+        divider.position.set(1, -4, 0); // Set at the bottom of the scene
+        scene.add(divider);
+        return divider;
+    }
     export default WardrobeCam;
