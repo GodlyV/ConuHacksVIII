@@ -1,0 +1,77 @@
+{"wardrobes": [
+    {
+        "name": "string",
+        "width": 100,
+        "height":10,
+        "depth":10,
+
+        "components": [{
+
+            "dividers":[{
+                "id:": 1,
+                "height":10,
+                "width":10,
+                "depth":10,
+                "color": "string",
+                "material" : "string",
+                "location": [1,1,1]
+            }],
+
+            "shelves": [{
+                "id:": 2,
+                "height":10,
+                "width":10,
+                "depth":10,
+                "color": "string",
+                "material" : "string",
+                "location": [1,1,1]
+            }],
+
+            "rods":[{
+                "id:": 3,
+                "width":10,
+                "color": "string",
+                "material" : "string",
+                "location": [1,1,1]
+            }],
+
+            "drawers":[{
+                "id:": 4,
+                "height":10,
+                "width":10,
+                "handle":"string",
+                "color": "string",
+                "material" : "string",
+                "location": [1,1,1]
+            }],
+
+            "doors":[
+                {
+                "id:": 5,
+                "height":10,
+                "width":10,
+                "type":"string",
+                "color": "string",
+                "material" : "string",
+                "location": [1,1,1]
+            }
+        ],
+
+            "lights":[{
+                "id:": 6,
+                "type":"string",
+                "strip_length" : 10,
+                "location": [1,1,1]
+            },
+            {
+                "id:": 7,
+                "type":"string",
+                "strip_length" : 0,
+                "location": [1,1,1]
+            }
+        ]
+        }]
+    }
+
+]
+}
