@@ -8,12 +8,14 @@ class Door extends THREE.Mesh {
         depth = depth || 0.1; // Default depth to 0.1 if not provided
 
         const geometry = new THREE.BoxGeometry(width, height, depth);
-        const textureLoader = new THREE.TextureLoader();
+        const woodTexture = new THREE.TextureLoader().load('./assets/door.png');
+        const material = new THREE.MeshStandardMaterial({ map:woodTexture }); // Light Slate Gray
         
         // Assuming the texture is in the 'public/assets' directory
         // const texture = textureLoader.load('assets/door.png');
-        const material = new THREE.MeshBasicMaterial({ color: 0x778899 }); // Light Slate Gray
+        // const material = new THREE.MeshBasicMaterial({ color: 0x778899 }); // Light Slate Gray
 
+        
         super(geometry, material);
         this.position.set(0, height / 2, 0);
     }
