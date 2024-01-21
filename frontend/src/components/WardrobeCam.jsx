@@ -18,6 +18,9 @@
         const [heigth, setHeigth] = useState(4);
         const [depth, setDepth] = useState(1);
         const [materialThickness, setMaterialThickness] = useState(0.25);
+        const [drawers, setDrawers] = useState([])
+        const draggableDrawers = useRef([])
+
         const [doors,setDoors] = useState([])
         const draggableDoors = useRef([])
         const [dividers, setDividers] = useState([]); // Array to store divider clones
@@ -26,6 +29,7 @@
         const initialDividerRef = useRef(null); // Ref to store the initial divider
         const [rods,setRods] = useState([])
         const initialRodRef = useRef(null)
+
         
         const initScene = (refContainer) => {
             const scene = new THREE.Scene();
@@ -81,14 +85,12 @@
 
         const createDivider = (scene) => {
             const divider = new WardrobeDivider();
-            divider.position.set(-1, -4, 0); // Adjust position as needed
             scene.add(divider);
             return divider;
         };
  
         const createDoor = (scene) => {
             const door = new Door();
-            door.position.set(-6, -4, 0); // Set at the bottom of the scene
             // Adjust position as needed
             scene.add(door);
             return door;
@@ -104,7 +106,6 @@
 
         const createDrawer = (scene) => {
             const drawer = new Drawer();
-            drawer.position.set(5, 1, 0); // Adjust position as needed
             scene.add(drawer);
             return drawer;
         };
@@ -139,6 +140,33 @@
             // myLabeledDoor.position.set(-10, -4, 0);
             // scene.add(myLabeledDoor);
 
+            const initialDrawer = createDrawer(scene);
+            initialDrawer.visible = true; // The initial rod is always visible
+            
+            // Create a clone of the initial rod but make it invisible and not draggable initially
+            const templateDraer = createDraggableDrawer(scene);
+            templateDraer.visible = false;
+            
+            // draggableRods only contains the initial rod initially
+            draggableDrawers.current = [initialDrawer];
+            const drawerDragControls = new DragControls(draggableDrawers.current, camera, renderer.domElement);
+
+            drawerDragControls.addEventListener('dragstart', event => {
+                // Ensure we're working with the initial door
+                // Clone the initial door and make it the target of the drag
+                const doorClone = templateDraer.clone();
+                doorClone.visible = true;
+                scene.add(doorClone);
+                setDrawers(prevDoors => [...prevDoors, doorClone]);
+        
+                // Update the drag controls to include the new clone
+                draggableDrawers.current.push(doorClone);
+                drawerDragControls.objects.push(doorClone);
+        
+                // Set the event object to the clone
+                event.object = doorClone;
+            });
+            ////////////
             const initialDoor = createDoor(scene);
             initialDoor.visible = true; // The initial rod is always visible
             
@@ -312,35 +340,19 @@
 
 
     function createDraggableDivider(scene) {
-        const width = 0.1;  // Divider thickness
-        const height = 2.5; // Divider height
-        const depth = 1;    // Divider depth
-        const geometry = new THREE.BoxGeometry(width, height, depth);
-
-        // Simple color material (adjust as needed)
-        const material = new THREE.MeshBasicMaterial({ color: 0x778899 }); // Light Slate Gray
-
-        const divider = new THREE.Mesh(geometry, material);
-        divider.position.set(-1, -4, 0); // Adjust position as needed
+        const divider = new WardrobeDivider()
         scene.add(divider);
         return divider;
     }
     
     function createDraggableDoor(scene) {
-        const width = 2;   // Default width to 2 if not provided
-        const height = 4; // Default height to 4 if not provided
-        const depth = 0.1; // Default depth to 0.1 if not provided
-
-        const geometry = new THREE.BoxGeometry(width, height, depth);
-        //const textureLoader = new THREE.TextureLoader();
-        
-        // Assuming the texture is in the 'public/assets' directory
-        // const texture = textureLoader.load('assets/door.png');
-        const material = new THREE.MeshBasicMaterial({ color: 0x778899 }); // Light Slate Gray
-        const door = new THREE.Mesh(geometry,material)
-        door.position.set(-6, -4, 0); // Set at the bottom of the scene
+        const door = new Door()
         scene.add(door);
         return door;
+    }
+    function createDraggableDrawer(scene){
+        const drawer = new Drawer();
+        return drawer
     }
     function createDraggableRod(scene) {
         const top_radius = 0.1;

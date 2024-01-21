@@ -14,7 +14,8 @@ class WardrobeDivider extends THREE.Mesh {
         super(geometry, material);
 
         // Set additional properties, if needed
-        this.position.set(0, height / 2, 0); // Positioning the divider base at y = 0
+        
+        this.position.set(-1, -5, 0); // Positioning the divider base at y = 0
     }
 
     // You can add custom methods specific to the wardrobe divider if needed

@@ -33,6 +33,8 @@ class Drawer extends THREE.Mesh {
         handle.position.set(0,0,depth/2);
         handle.rotation.z = Math.PI / 2;
         // Add the handle to the drawer
+        this.position.set(8, -5, 0); // Adjust position as needed
+
         this.add(handle);
 
 }

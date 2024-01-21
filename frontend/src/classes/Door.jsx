@@ -15,8 +15,10 @@ class Door extends THREE.Mesh {
         // const texture = textureLoader.load('assets/door.png');
         // const material = new THREE.MeshBasicMaterial({ color: 0x778899 }); // Light Slate Gray
 
-        
+
         super(geometry, material);
+        this.position.set(-6, -5, 0); // Set at the bottom of the scene
+
     }
 }
 
