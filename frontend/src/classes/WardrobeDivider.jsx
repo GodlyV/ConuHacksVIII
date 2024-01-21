@@ -9,7 +9,7 @@ class WardrobeDivider extends THREE.Mesh {
         const geometry = new THREE.BoxGeometry(width, height, depth);
 
         // Simple color material (adjust as needed)
-        const material = new THREE.MeshBasicMaterial({ color: 0x778899 }); // Light Slate Gray
+        const material = new THREE.MeshStandardMaterial({ color: 0x778899 }); // Light Slate Gray
 
         super(geometry, material);
 

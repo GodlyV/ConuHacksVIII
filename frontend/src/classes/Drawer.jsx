@@ -13,11 +13,10 @@ class Drawer extends THREE.Mesh {
 
         // Metal Material
         // const cylinderMaterial = new THREE.MeshNormalMaterial({});
-        const drawerMaterial = new THREE.MeshBasicMaterial({color: 0x665542})
+        const drawerMaterial = new THREE.MeshStandardMaterial({color: 0x665542})
         // const cylinderMesh = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
 
         super(drawerGeometry, drawerMaterial);
-
 
         // Create the handle geometry
         const handleRadius = 0.05;

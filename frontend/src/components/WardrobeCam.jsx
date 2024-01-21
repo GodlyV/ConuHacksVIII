@@ -41,7 +41,7 @@
         const createWardrobe = (scene) => {
             const geometry = new THREE.BoxGeometry(1, 1, 1);
 
-            const material_cube = new THREE.MeshBasicMaterial({ color: 0xEA9999 });
+            const material_cube = new THREE.MeshStandardMaterial({ color: 0xEA9999 });
             const wardrobe_base = new THREE.Mesh(geometry, material_cube);
             wardrobe_base.scale.set(width, materialThickness, depth); // Adjust the scale of the cube
             wardrobe_base.position.set(0,0,0); // move the wardrobe so that the front of it is at z=0
@@ -51,7 +51,7 @@
             wardrobe_base_top.position.set(0, heigth - materialThickness/2, 0);
             scene.add(wardrobe_base_top);
 
-            const material_cube0 = new THREE.MeshBasicMaterial({ color: 0xF9CB9C });
+            const material_cube0 = new THREE.MeshStandardMaterial({ color: 0xF9CB9C });
             const wardrobe_back = new THREE.Mesh(geometry, material_cube0);
             wardrobe_back.scale.set(width, materialThickness, heigth); // Adjust the scale of the cube
             wardrobe_back.rotation.x = Math.PI / 2;
@@ -59,7 +59,7 @@
             scene.add(wardrobe_back);
 
 
-            const material_cube1 = new THREE.MeshBasicMaterial({ color: 0xFFE599 });
+            const material_cube1 = new THREE.MeshStandardMaterial({ color: 0xFFE599 });
             const wardrobe_side = new THREE.Mesh(geometry, material_cube1);
             wardrobe_side.scale.set(heigth, materialThickness, depth); // Adjust the scale of the cube
 
