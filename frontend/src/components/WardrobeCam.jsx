@@ -9,6 +9,7 @@
     import Door from '../classes/Door.jsx';
     import Rod from '../classes/Rod.jsx';
     import LabeledDoor from '../classes/LabeledDoor.jsx';
+    import Drawer from '../classes/Drawer.jsx';
 
     const WardrobeCam = () => {
         const refContainer = useRef(null);
@@ -98,6 +99,13 @@
             return rod;
         };
 
+        const createDrawer = (scene) => {
+            const drawer = new Drawer();
+            drawer.position.set(0, 1, 0); // Adjust position as needed
+            scene.add(drawer);
+            return drawer;
+        };
+
         useEffect(() => {
             if (!refContainer.current) return;
         
@@ -113,9 +121,10 @@
             const door = createDoor(scene);
             const divider = createWardrobeDivider(scene);
             const rod = createRod(scene);
+            const drawer = createDrawer(scene);
         
             // Set up drag controls
-            const dragControls = new DragControls([door,divider,rod], camera, renderer.domElement);
+            const dragControls = new DragControls([door,divider,rod,drawer], camera, renderer.domElement);
             // ... drag controls event listeners ...
             // const wardrobe = createWardrobe(scene);
 
