@@ -20,7 +20,7 @@ class Drawer extends THREE.Mesh {
 
 
         // Create the handle geometry
-        const handleRadius = 0.1;
+        const handleRadius = 0.05;
         const handleHeight = 0.8;
         const handleGeometry = new THREE.CylinderGeometry(handleRadius, handleRadius, handleHeight, 16);
         
