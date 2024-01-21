@@ -40,16 +40,22 @@
 .read-the-docs {
   color: #888;
 }
+
+.main {
+  margin-left: 15%;
+  padding: 0;
+}
+
 .PropertiesMenu {
   width: 15%;
+  height: 100%;
   position: fixed;
   z-index: 1;
-  top: 3%;
-  left: 3%;
+  top: 0;
+  left: 0;
   background: #d9d3cc;
   overflow-x: hidden;
   padding: 4px;
-  border-radius: 15px;
 
 }
 .PropertiesMenu p {

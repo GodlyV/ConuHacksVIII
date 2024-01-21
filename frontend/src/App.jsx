@@ -11,7 +11,7 @@ function App() {
     <div class="PropertiesMenu">
     <PropertiesMenu />
     </div>
-    <div>
+    <div class="main">
     <WardrobeCam />
     </div>
     </>
