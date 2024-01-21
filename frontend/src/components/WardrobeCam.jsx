@@ -81,15 +81,15 @@
 
         const createDivider = (scene) => {
             const divider = new WardrobeDivider();
-            divider.position.set(1, -4, 0); // Adjust position as needed
+            divider.position.set(-1, -4, 0); // Adjust position as needed
             scene.add(divider);
             return divider;
         };
  
         const createDoor = (scene) => {
             const door = new Door();
-            door.position.set(2, 0, width/2 + 0.05); // Adjust position as needed
-             // Adjust position as needed
+            door.position.set(-6, -4, 0); // Set at the bottom of the scene
+            // Adjust position as needed
             scene.add(door);
             return door;
         };
@@ -97,14 +97,14 @@
         const createRod = (scene) => {
             const rod = new Rod();
             rod.rotation.z = Math.PI / 2;
-            rod.position.set(5, -5, 0); // Adjust position as needed
+            rod.position.set(3, -5, 0); // Adjust position as needed
             scene.add(rod);
             return rod;
         };
 
         const createDrawer = (scene) => {
             const drawer = new Drawer();
-            drawer.position.set(0, 1, 0); // Adjust position as needed
+            drawer.position.set(5, 1, 0); // Adjust position as needed
             scene.add(drawer);
             return drawer;
         };
@@ -135,11 +135,37 @@
             // ... drag controls event listeners ...
             // const wardrobe = createWardrobe(scene);
 
-            const myLabeledDoor = new LabeledDoor(2, 4, 0.1, 'My Door');
-            myLabeledDoor.position.set(-10, -4, 0);
-            scene.add(myLabeledDoor);
+            // const myLabeledDoor = new LabeledDoor(2, 4, 0.1, 'My Door');
+            // myLabeledDoor.position.set(-10, -4, 0);
+            // scene.add(myLabeledDoor);
 
+            const initialDoor = createDoor(scene);
+            initialDoor.visible = true; // The initial rod is always visible
             
+            // Create a clone of the initial rod but make it invisible and not draggable initially
+            const templateDoor = createDraggableDoor(scene);
+            templateDoor.visible = false;
+            
+            // draggableRods only contains the initial rod initially
+            draggableDoors.current = [initialDoor];
+            const doorDragControls = new DragControls(draggableDoors.current, camera, renderer.domElement);
+
+            doorDragControls.addEventListener('dragstart', event => {
+                // Ensure we're working with the initial door
+                // Clone the initial door and make it the target of the drag
+                const doorClone = templateDoor.clone();
+                doorClone.visible = true;
+                scene.add(doorClone);
+                setDoors(prevDoors => [...prevDoors, doorClone]);
+        
+                // Update the drag controls to include the new clone
+                draggableDoors.current.push(doorClone);
+                doorDragControls.objects.push(doorClone);
+        
+                // Set the event object to the clone
+                event.object = doorClone;
+            });
+            ///////////////////////
             const initialRod = createRod(scene);
             initialRod.visible = true; // The initial rod is always visible
             
@@ -156,7 +182,7 @@
                 const rodClone = templateRod.clone();
                 rodClone.visible = true;
                 scene.add(rodClone);
-                setDividers(prevClone => [...prevClone, rodClone]);
+                setRods(prevClone => [...prevClone, rodClone]);
 
                 // Replace the target of the drag to the clone
                 event.object = rodClone;
@@ -185,11 +211,6 @@
                 draggableDividers.current.push(dividerClone);
 
             });
-                
-            dividerDragControls.addEventListener('dragend', event => {
-                // You can add any additional logic needed when drag ends
-            });
-        
             const animate = () => {
                 requestAnimationFrame(animate);
                 renderer.render(scene, camera);
@@ -243,7 +264,7 @@
                 // wardrobe.dispose();
 
                 // Dispose of the draggable mesh
-                scene.remove(myLabeledDoor);
+                //scene.remove(myLabeledDoor);
 
                 // Remove other objects from the scene and dispose of their resources
                 // Example for a generic object added to the scene
@@ -300,7 +321,7 @@
         const material = new THREE.MeshBasicMaterial({ color: 0x778899 }); // Light Slate Gray
 
         const divider = new THREE.Mesh(geometry, material);
-        divider.position.set(1, -4, 0); // Set at the bottom of the scene
+        divider.position.set(-1, -4, 0); // Adjust position as needed
         scene.add(divider);
         return divider;
     }
@@ -311,13 +332,13 @@
         const depth = 0.1; // Default depth to 0.1 if not provided
 
         const geometry = new THREE.BoxGeometry(width, height, depth);
-        const textureLoader = new THREE.TextureLoader();
+        //const textureLoader = new THREE.TextureLoader();
         
         // Assuming the texture is in the 'public/assets' directory
         // const texture = textureLoader.load('assets/door.png');
         const material = new THREE.MeshBasicMaterial({ color: 0x778899 }); // Light Slate Gray
         const door = new THREE.Mesh(geometry,material)
-        door.position.set(1, -4, 0); // Set at the bottom of the scene
+        door.position.set(-6, -4, 0); // Set at the bottom of the scene
         scene.add(door);
         return door;
     }
@@ -333,7 +354,7 @@
         const cylinderMaterial = new THREE.MeshStandardMaterial({color: '0x808080', roughness: 0.2, metalness: 0.8})
         const rod = new THREE.Mesh(cylinderGeometry,cylinderMaterial)
         rod.rotation.z = Math.PI / 2;
-        rod.position.set(5, -5, 0);
+        rod.position.set(3, -5, 0); // Adjust position as needed
         return rod;
     }
     export default WardrobeCam;

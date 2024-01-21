@@ -17,7 +17,6 @@ class Door extends THREE.Mesh {
 
         
         super(geometry, material);
-        this.position.set(0, height / 2, 0);
     }
 }
 
