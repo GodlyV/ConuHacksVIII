@@ -121,15 +121,15 @@
             const mouse = new THREE.Vector2();
             
             const wardrobe = createWardrobe(scene);
-            const door = createDoor(scene);
-            const divider = createWardrobeDivider(scene);
-            const rod = createRod(scene);
-            const drawer = createDrawer(scene);
+            // const door = createDoor(scene);
+            // const divider = createWardrobeDivider(scene);
+            // const rod = createRod(scene);
+            // const drawer = createDrawer(scene);
 
             const light = new THREE.PointLight( 0xffffff, 100, 100 );
             light.position.set( 5, 5, 5);
             scene.add( light );
-
+                    
             // Set up drag controls
             const dragControls = new DragControls([], camera, renderer.domElement);
             // ... drag controls event listeners ...
